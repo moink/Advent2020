@@ -12,7 +12,7 @@ import shutil
 import urllib.request
 
 
-import scipy
+from scipy import signal
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -53,7 +53,7 @@ def download_input_data(day, new_dir):
     """
     with open('session_cookie.txt') as cookie_file:
         session_cookie = cookie_file.read()
-    url = f'https://adventofcode.com/2018/day/{day}/input'
+    url = f'https://adventofcode.com/2020/day/{day}/input'
     opener = urllib.request.build_opener()
     opener.addheaders = [('cookie', 'session=' + session_cookie)]
     urllib.request.install_opener(opener)
@@ -91,6 +91,7 @@ def read_input_lines():
     with open('input.txt') as in_file:
         data = in_file.read().strip().splitlines()
     return data
+
 
 def read_input_no_strip():
     """Open today's input data and return it as a list of lines
@@ -133,7 +134,7 @@ def count_times_true(function):
     return sum(valid)
 
 
-def dict_from_input_file(sep = ' => ', key='left'):
+def dict_from_input_file(sep=' => ', key='left'):
     """Read today's input.txt as a dictionary
 
     Args:
@@ -159,7 +160,7 @@ def dict_from_input_file(sep = ' => ', key='left'):
     return result
 
 
-def dict_of_list_from_file(sep = ' => ', key='left'):
+def dict_of_list_from_file(sep=' => ', key='left'):
     """Read today's input.txt as a dictionary of lists
 
         Args:
@@ -183,6 +184,7 @@ def dict_of_list_from_file(sep = ' => ', key='left'):
         else:
             result[right.strip()].append(left.strip())
     return dict(result)
+
 
 class PlottingGrid:
     """A tool for maintaining and plotting a grid of numbers
@@ -292,9 +294,9 @@ class GameOfLife(PlottingGrid):
 
     def count_neighbours(self):
         """Count the number of neighbours each grid point has"""
-        count = scipy.signal.convolve2d(self.grid, self.convolve_matrix,
-                                        mode='same', boundary='fill',
-                                        fillvalue=self.walls_treated_as)
+        count = signal.convolve2d(self.grid, self.convolve_matrix,
+                                  mode='same', boundary='fill',
+                                  fillvalue=self.walls_treated_as)
         return count
 
     def one_step(self):
@@ -336,6 +338,7 @@ class GameOfLife(PlottingGrid):
         for i in range(num_steps):
             self.one_step()
         self.show()
+
 
 class StateForGraphs(abc.ABC):
     """A starter for a state class for use in graph traversal
@@ -741,9 +744,9 @@ def get_inside_outside_brackets(data, start_char, end_char, nested=True):
                     in_brackets = False
                     outside.append('')
                 else:
-                    inside[-1] = inside[-1] + (char)
+                    inside[-1] = inside[-1] + char
             else:
-                inside[-1] = inside[-1] + (char)
+                inside[-1] = inside[-1] + char
                 if char == start_char:
                     count = count + 1
         elif char == start_char:
@@ -754,6 +757,7 @@ def get_inside_outside_brackets(data, start_char, end_char, nested=True):
             outside[-1] = outside[-1] + char
     outside = [item for item in outside if item]
     return inside, outside
+
 
 def recursive_inside_outside(data, start_char, end_char):
     """Recursively break up nested delimited strings
@@ -801,5 +805,5 @@ def read_all_integers():
 
 if __name__ == '__main__':
     # start_coding_today()
-    today = 4
+    today = 1
     start_coding(today)
