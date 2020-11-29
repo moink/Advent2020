@@ -117,6 +117,21 @@ def read_whole_input():
     return data
 
 
+def read_all_integers():
+    """Read all the integers on each line of the input file
+
+    Returns:
+        integers: [[int]]
+            All integers on each line of today's input file
+    """
+    result = []
+    for line in read_input_lines():
+        num_strings = re.findall(r'-?[0-9]+', line)
+        nums = [int(num_str) for num_str in num_strings]
+        result.append(nums)
+    return result
+
+
 def count_times_true(function):
     """Count the number of times some function is true for the input lines
 
@@ -788,19 +803,63 @@ def recursive_inside_outside(data, start_char, end_char):
     return {'outside': outside, 'inside': inside_full}
 
 
-def read_all_integers():
-    """Read all the integers on each line of the input file
+class LinkedListNode:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.previous = None
 
-    Returns:
-        integers: [[int]]
-            All integers on each line of today's input file
-    """
-    result = []
-    for line in read_input_lines():
-        num_strings = re.findall(r'-?[0-9]+', line)
-        nums = [int(num_str) for num_str in num_strings]
-        result.append(nums)
-    return result
+    def __str__(self):
+        return str(self.data)
+
+    def __hash__(self):
+        return hash(self.data)
+
+    def __eq__(self, other):
+        return self.data == other.data
+
+
+class CircularLinkedList:
+    def __init__(self):
+        self.head = LinkedListNode(0)
+        self.head.next = self.head
+        self.head.previous = self.head
+        self.current = self.head
+
+    def get_current(self):
+        return self.current.data
+
+    def add_node_after_current(self, data):
+        new_node = LinkedListNode(data)
+        new_node.next = self.current.next
+        new_node.previous = self.current
+        self.current.next.previous = new_node
+        self.current.next = new_node
+        self.current = new_node
+
+    def remove_current_node(self):
+        self.current.previous.next = self.current.next
+        self.current.next.previous = self.current.previous
+        self.current = self.current.next
+
+    def move_clockwise(self, steps):
+        for _ in range(steps):
+            self.current = self.current.next
+
+    def move_counterclockwise(self, steps):
+        for _ in range(steps):
+            self.current = self.current.previous
+
+    def __str__(self):
+        result = str(self.head) + ' '
+        place = self.head.next
+        while place != self.head:
+            if place == self.current:
+                result = result + '(' + str(place) + ') '
+            else:
+                result = result + str(place) + ' '
+            place = place.next
+        return result
 
 
 if __name__ == '__main__':
