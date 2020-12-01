@@ -1,29 +1,21 @@
-import contextlib
-import collections
-import copy
-import functools
 import itertools
-import numpy as np
-import pandas as pd
-import re
 
 import advent_tools
 
 
-def run_part_1():
-    data = [row[0] for row in advent_tools.read_all_integers()]
+def run_part_1(data):
     for a, b in itertools.combinations(data, 2):
         if a + b == 2020:
             return a * b
 
 
-def run_part_2():
-    data = [row[0] for row in advent_tools.read_all_integers()]
+def run_part_2(data):
     for a, b, c in itertools.combinations(data, 3):
         if a + b + c == 2020:
             return a * b * c
 
 
 if __name__ == '__main__':
-    print(run_part_1())
-    print(run_part_2())
+    data = [row[0] for row in advent_tools.read_all_integers()]
+    print(run_part_1(data))
+    print(run_part_2(data))
