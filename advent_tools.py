@@ -149,7 +149,7 @@ def count_times_true(function):
     return sum(valid)
 
 
-def dict_from_input_file(sep=' => ', key='left'):
+def read_dict_from_input_file(sep=' => ', key='left'):
     """Read today's input.txt as a dictionary
 
     Args:
@@ -175,7 +175,7 @@ def dict_from_input_file(sep=' => ', key='left'):
     return result
 
 
-def dict_of_list_from_file(sep=' => ', key='left'):
+def read_dict_of_list_from_file(sep=' => ', key='left'):
     """Read today's input.txt as a dictionary of lists
 
         Args:
@@ -863,6 +863,6 @@ class CircularLinkedList:
 
 
 if __name__ == '__main__':
-    # start_coding_today()
-    today = 1
-    start_coding(today)
+    start_coding_today()
+    # today = 1
+    # start_coding(today)
