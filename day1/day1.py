@@ -16,6 +16,6 @@ def run_part_2(data):
 
 
 if __name__ == '__main__':
-    data = [row[0] for row in advent_tools.read_all_integers()]
+    data = advent_tools.read_one_int_per_line()
     print(run_part_1(data))
     print(run_part_2(data))

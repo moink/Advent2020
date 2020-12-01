@@ -132,6 +132,15 @@ def read_all_integers():
     return result
 
 
+def read_one_int_per_line():
+    """Read one integer from each line of the file
+
+    Returns:
+        integers: [int]
+            First integer from each line of today's input file
+    """
+    return [row[0] for row in read_all_integers()]
+
 def count_times_true(function):
     """Count the number of times some function is true for the input lines
 
