@@ -4,9 +4,9 @@ import advent_tools
 
 
 def is_valid_part_one(line):
-    first, last, letter, password = process_line(line)
+    min_count, max_count, letter, password = process_line(line)
     c = collections.Counter(password)
-    return first <= c[letter] <= last
+    return min_count <= c[letter] <= max_count
 
 
 def is_valid_part_two(line):
