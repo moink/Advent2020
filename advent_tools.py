@@ -231,7 +231,7 @@ class PlottingGrid:
         """
         self.grid = np.zeros(shape, dtype=int)
 
-    def read_input_file(self, char_map):
+    def read_input_file(self, char_map=None):
         """Read and store the grid from today's input file
 
         Args:
@@ -242,6 +242,8 @@ class PlottingGrid:
         Returns:
 
         """
+        if char_map is None:
+            char_map = {'.' : 0, '#' : 1}
         lines = read_input_no_strip()
         for y_pos, line in enumerate(lines):
             for x_pos, char in enumerate(line):
