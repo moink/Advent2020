@@ -231,6 +231,28 @@ class PlottingGrid:
         """
         self.grid = np.zeros(shape, dtype=int)
 
+    @classmethod
+    def from_file(cls, char_map=None):
+        """Create a new plotting grid from today's input file
+
+        Alternative constructor
+
+        Args:
+            char_map: {str: int}
+                Mapping of characters in the file to integers in the numpy
+                array. For example {'.' : 0, '#' : 1} which is typical
+                Topaz-notation for a maze with open areas and walls
+        Returns:
+            None
+        """
+        text = read_input_lines()
+        max_y = len(read_input_lines())
+        max_x = max(len(line) for line in text)
+        print(max_y, max_x)
+        new_grid = cls((max_y, max_x))
+        new_grid.read_input_file(char_map)
+        return new_grid
+
     def read_input_file(self, char_map=None):
         """Read and store the grid from today's input file
 
@@ -240,7 +262,7 @@ class PlottingGrid:
                 array. For example {'.' : 0, '#' : 1} which is typical
                 Topaz-notation for a maze with open areas and walls
         Returns:
-
+            None
         """
         if char_map is None:
             char_map = {'.' : 0, '#' : 1}

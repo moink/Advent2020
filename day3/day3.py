@@ -6,12 +6,15 @@ import advent_tools
 def is_tree(grid, x, y):
     h, w = grid.grid.shape
     i = x % w
-    tree = grid.grid[y, i]
+    try:
+        tree = grid.grid[y, i]
+    except IndexError:
+        tree = 0
     return tree
 
 
 def count_trees(grid, slope):
-    max_y = grid.grid.shape[0]
+    max_y = grid.grid.shape[0] + 1
     slope_x, slope_y = slope
     x = 0
     y = 0
@@ -34,7 +37,7 @@ def run_part_2(grid):
 
 
 if __name__ == '__main__':
-    data = advent_tools.PlottingGrid((324, 31))
+    data = advent_tools.PlottingGrid.from_file()
     data.read_input_file()
     print(run_part_1(data))
     print(run_part_2(data))
