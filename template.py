@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # data = advent_tools.read_dict_from_input_file(sep=' => ', key='left')
     # data = advent_tools.read_dict_of_list_from_file(sep=' => ', key='left')
     # data = advent_tools.read_one_int_per_line()
-    # data = advent_tools.PlottingGrid.from_file()
+    # data = advent_tools.PlottingGrid.from_file({'.' : 0, '#' : 1})
     processed = process_input(data)
     print(run_part_1(processed))
     print(run_part_2(processed))
