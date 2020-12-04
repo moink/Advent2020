@@ -1,8 +1,5 @@
 import re
 
-import advent_tools
-
-
 def process_input(data):
     passports = [{}]
     for line in data:
@@ -65,7 +62,8 @@ def is_valid_part_two(row):
 
 
 if __name__ == '__main__':
-    data = advent_tools.read_input_lines()
+    with open('input.txt') as in_file:
+        data = in_file.read().strip().splitlines()
     processed = process_input(data)
     print(run_part_1(processed))
     print(run_part_2(processed))
