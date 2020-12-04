@@ -16,6 +16,8 @@ from scipy import signal
 from matplotlib import pyplot as plt
 import numpy as np
 
+INPUT_FILE = 'input.txt'
+
 
 def set_up_directory(day):
     """Make a new directory for working on an advent of code problem
@@ -88,7 +90,7 @@ def read_input_lines():
         [str]
             Lines in 'input.txt'
     """
-    with open('input.txt') as in_file:
+    with open(INPUT_FILE) as in_file:
         data = in_file.read().strip().splitlines()
     return data
 
