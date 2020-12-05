@@ -24,6 +24,7 @@ def run_part_2(data):
 
 
 if __name__ == '__main__':
+    advent_tools.INPUT_FILE = 'test_input.txt'
     # data = advent_tools.read_all_integers()
     # data = advent_tools.read_whole_input()
     # data = advent_tools.read_input_lines()

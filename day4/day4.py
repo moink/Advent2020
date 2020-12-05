@@ -63,7 +63,7 @@ def is_valid_part_two(row):
 
 if __name__ == '__main__':
     with open('input.txt') as in_file:
-        data = in_file.read().strip().splitlines()
+        data = in_file.read().splitlines()
     processed = process_input(data)
     print(run_part_1(processed))
     print(run_part_2(processed))

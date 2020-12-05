@@ -38,6 +38,8 @@ def set_up_directory(day):
     template_file_name = os.path.join(this_dir, 'template.py')
     if not(os.path.exists(new_file_name)):
         shutil.copy(template_file_name, new_file_name)
+    test_file_name = os.path.join(new_dir, 'test_input.txt')
+    open(test_file_name, 'a').close()
     return new_dir
 
 
