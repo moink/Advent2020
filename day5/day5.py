@@ -3,8 +3,8 @@ import itertools
 
 def get_seat_id(line):
     char_map = {'B': '1', 'F': '0', 'L': '0', 'R': '1'}
-    bin = ''.join(char_map[char] for char in line)
-    return int(bin, 2)
+    binary = ''.join(char_map[char] for char in line)
+    return int(binary, 2)
 
 
 def run_part_1(seats):
