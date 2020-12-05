@@ -10,13 +10,22 @@ import os
 import re
 import shutil
 import urllib.request
-
+import warnings
 
 from scipy import signal
 from matplotlib import pyplot as plt
 import numpy as np
 
-INPUT_FILE = 'input.txt'
+REAL_INPUT_FILENAME = 'input.txt'
+TEST_INPUT_FILENAME = 'test_input.txt'
+TESTING = False
+
+
+def input_filename():
+    if TESTING:
+        warnings.warn("Test mode active, loading " + TEST_INPUT_FILENAME)
+        return TEST_INPUT_FILENAME
+    return REAL_INPUT_FILENAME
 
 
 def set_up_directory(day):
@@ -38,7 +47,7 @@ def set_up_directory(day):
     template_file_name = os.path.join(this_dir, 'template.py')
     if not(os.path.exists(new_file_name)):
         shutil.copy(template_file_name, new_file_name)
-    test_file_name = os.path.join(new_dir, 'test_input.txt')
+    test_file_name = os.path.join(new_dir, TEST_INPUT_FILENAME)
     open(test_file_name, 'a').close()
     return new_dir
 
@@ -61,7 +70,7 @@ def download_input_data(day, new_dir):
     opener = urllib.request.build_opener()
     opener.addheaders = [('cookie', 'session=' + session_cookie)]
     urllib.request.install_opener(opener)
-    input_file = os.path.join(new_dir, 'input.txt')
+    input_file = os.path.join(new_dir, REAL_INPUT_FILENAME)
     urllib.request.urlretrieve(url, input_file)
 
 
@@ -92,7 +101,7 @@ def read_input_lines():
         [str]
             Lines in 'input.txt'
     """
-    with open(INPUT_FILE) as in_file:
+    with open(input_filename()) as in_file:
         data = in_file.read().strip().splitlines()
     return data
 
@@ -104,7 +113,7 @@ def read_input_no_strip():
         [str]
             Lines in 'input.txt'
     """
-    with open('input.txt') as in_file:
+    with open(input_filename()) as in_file:
         data = in_file.read().splitlines()
     return data
 
@@ -116,7 +125,7 @@ def read_whole_input():
         str
             Contents of 'input.txt'
     """
-    with open('input.txt') as in_file:
+    with open(input_filename()) as in_file:
         data = in_file.read().strip()
     return data
 
@@ -144,6 +153,7 @@ def read_one_int_per_line():
             First integer from each line of today's input file
     """
     return [row[0] for row in read_all_integers()]
+
 
 def count_times_true(function):
     """Count the number of times some function is true for the input lines
@@ -252,7 +262,7 @@ class PlottingGrid:
         text = read_input_lines()
         max_y = len(read_input_lines())
         max_x = max(len(line) for line in text)
-        print(max_y, max_x)
+        print(f'Creating Plotting Grid of size ({max_y}, {max_x})')
         new_grid = cls((max_y, max_x))
         new_grid.read_input_file(char_map)
         return new_grid
@@ -263,7 +273,7 @@ class PlottingGrid:
         Args:
             char_map: {str: int}
                 Mapping of characters in the file to integers in the numpy
-                array. For example {'.' : 0, '#' : 1} which is typical
+                array. The default is {'.' : 0, '#' : 1} which is typical
                 Topaz-notation for a maze with open areas and walls
         Returns:
             None
@@ -788,7 +798,7 @@ def get_inside_outside_brackets(data, start_char, end_char, nested=True):
     inside = []
     in_brackets = False
     count = 0
-    for pos, char in enumerate(data):
+    for char in data:
         if in_brackets:
             if char == end_char:
                 count = count - 1
