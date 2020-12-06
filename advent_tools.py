@@ -130,6 +130,18 @@ def read_whole_input():
     return data
 
 
+def read_input_line_groups():
+    """Open today's input data and return groups of lines separated by linebreaks
+
+    Returns:
+        [[str]]
+            Groups of lines of 'input.txt'
+    """
+    contents = read_whole_input()
+    groups = contents.split('\n\n')
+    return [group.splitlines() for group in groups]
+
+
 def read_all_integers():
     """Read all the integers on each line of the input file
 
