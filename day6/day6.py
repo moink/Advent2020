@@ -1,14 +1,4 @@
-import contextlib
 import collections
-import copy
-import functools
-import itertools
-import math
-import numpy as np
-import pandas as pd
-import re
-
-import advent_tools
 
 
 def process_input(data):
