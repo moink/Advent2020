@@ -1,0 +1,46 @@
+import contextlib
+import collections
+import copy
+import functools
+import itertools
+import math
+import numpy as np
+import pandas as pd
+import re
+
+import advent_tools
+
+
+def process_input(data):
+    groups = data.split('\n\n')
+    total = 0
+    for group in groups:
+        answered = set()
+        for line in group.splitlines():
+            for char in line:
+                answered.add(char)
+        total = total + len(answered)
+    print(total)
+    return total
+
+def run_part_1(data):
+    pass
+
+
+def run_part_2(data):
+    pass
+
+
+if __name__ == '__main__':
+    # advent_tools.TESTING = True
+    # data = advent_tools.read_all_integers()
+    data = advent_tools.read_whole_input()
+    # data = advent_tools.read_input_lines()
+    # data = advent_tools.read_input_no_strip()
+    # data = advent_tools.read_dict_from_input_file(sep=' => ', key='left')
+    # data = advent_tools.read_dict_of_list_from_file(sep=' => ', key='left')
+    # data = advent_tools.read_one_int_per_line()
+    # data = advent_tools.PlottingGrid.from_file({'.' : 0, '#' : 1})
+    data = process_input(data)
+    print(run_part_1(data))
+    print(run_part_2(data))
