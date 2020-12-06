@@ -13,34 +13,27 @@ import advent_tools
 
 def process_input(data):
     groups = data.split('\n\n')
-    total = 0
+    result = []
     for group in groups:
-        answered = set()
-        for line in group.splitlines():
-            for char in line:
-                answered.add(char)
-        total = total + len(answered)
-    print(total)
-    return total
-
-def run_part_1(data):
-    pass
+        lines = group.splitlines()
+        num_lines = len(lines)
+        counts = collections.Counter(''.join(lines))
+        result.append({'num': num_lines, 'counts': counts})
+    return result
 
 
-def run_part_2(data):
-    pass
+def run_part_1(groups):
+    return sum(len(group['counts']) for group in groups)
+
+
+def run_part_2(groups):
+    return sum(count == group['num'] for group in groups
+               for count in group['counts'].values())
 
 
 if __name__ == '__main__':
-    # advent_tools.TESTING = True
-    # data = advent_tools.read_all_integers()
-    data = advent_tools.read_whole_input()
-    # data = advent_tools.read_input_lines()
-    # data = advent_tools.read_input_no_strip()
-    # data = advent_tools.read_dict_from_input_file(sep=' => ', key='left')
-    # data = advent_tools.read_dict_of_list_from_file(sep=' => ', key='left')
-    # data = advent_tools.read_one_int_per_line()
-    # data = advent_tools.PlottingGrid.from_file({'.' : 0, '#' : 1})
+    with open('input.txt') as in_file:
+        data = in_file.read().strip()
     data = process_input(data)
     print(run_part_1(data))
     print(run_part_2(data))
