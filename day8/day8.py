@@ -1,5 +1,3 @@
-import copy
-
 import advent_tools
 
 
@@ -8,7 +6,7 @@ class HandheldComputer(advent_tools.Computer):
     return_register = 'a'  # Needed for inheritance but not actually used
 
     def __init__(self):
-        self.instruction_pointer = 0
+        super().__init__()
         self.acc = 0
         self.have_run = set()
 
@@ -29,9 +27,9 @@ class HandheldComputer(advent_tools.Computer):
             try:
                 line = program[self.instruction_pointer]
             except IndexError:
-                return (True, self.acc)
+                return True, self.acc
             if self.instruction_pointer in self.have_run:
-                return (False, self.acc)
+                return False, self.acc
             self.have_run.add(self.instruction_pointer)
             self.run_instruction(line)
             self.instruction_pointer = self.instruction_pointer + 1
@@ -57,6 +55,7 @@ def run_part_2(program):
             return val
         program[line_num] = old_line
     return 'Failed'
+
 
 if __name__ == '__main__':
     data = advent_tools.read_input_lines()
