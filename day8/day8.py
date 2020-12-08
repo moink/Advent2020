@@ -29,36 +29,33 @@ class HandheldComputer(advent_tools.Computer):
             try:
                 line = program[self.instruction_pointer]
             except IndexError:
-                return ('Finished', self.acc)
+                return (True, self.acc)
             if self.instruction_pointer in self.have_run:
-                return ('Infinite', self.acc)
+                return (False, self.acc)
             self.have_run.add(self.instruction_pointer)
             self.run_instruction(line)
             self.instruction_pointer = self.instruction_pointer + 1
 
 
-def run_part_1(data):
+def run_part_1(program):
     computer = HandheldComputer()
-    return computer.run_program(data)[1]
+    return computer.run_program(program)[1]
 
 
-def run_part_2(data):
-    nop_lines = [i for i, line in enumerate(data) if line.startswith('nop')]
-    jmp_lines = [i for i, line in enumerate(data) if line.startswith('jmp')]
-    for line_num in nop_lines:
-        prog = copy.deepcopy(data)
-        prog[line_num] = prog[line_num].replace('nop', 'jmp')
+def run_part_2(program):
+    for line_num, line in enumerate(program):
+        if line.startswith('acc'):
+            continue
+        old_line = line
+        if line.startswith('nop'):
+            program[line_num] = old_line.replace('nop', 'jmp')
+        if line.startswith('jmp'):
+            program[line_num] = old_line.replace('jmp', 'nop')
         comp = HandheldComputer()
-        fin, val = comp.run_program(prog)
-        if fin == 'Finished':
+        finished, val = comp.run_program(program)
+        if finished:
             return val
-    for line_num in jmp_lines:
-        prog = copy.deepcopy(data)
-        prog[line_num] = prog[line_num].replace('jmp', 'nop')
-        comp = HandheldComputer()
-        fin, val = comp.run_program(prog)
-        if fin == 'Finished':
-            return val
+        program[line_num] = old_line
     return 'Failed'
 
 if __name__ == '__main__':
