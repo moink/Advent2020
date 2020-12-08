@@ -2,6 +2,7 @@ import copy
 
 import advent_tools
 
+
 class HandheldComputer(advent_tools.Computer):
     operation = advent_tools.Computer.operation
     return_register = 'a'  # Needed for inheritance but not actually used
@@ -24,19 +25,6 @@ class HandheldComputer(advent_tools.Computer):
         self.instruction_pointer += int(arg) - 1
 
     def run_program(self, program):
-        """Run a list of instructions through the virtual machine
-
-        The program terminates when the instruction pointer moves past the
-        end of the program
-
-        Args:
-            program: [str]
-                Instructions, each of which starts with a valid operation
-                identifier
-        Returns:
-            int
-                Contents of the return register when the program terminates
-        """
         while True:
             try:
                 line = program[self.instruction_pointer]
@@ -53,13 +41,8 @@ def run_part_1(data):
     return computer.run_program(data)[1]
 
 def run_part_2(data):
-    nop_lines = []
-    jmp_lines = []
-    for i, line in enumerate(data):
-        if line.startswith('nop'):
-            nop_lines.append(i)
-        elif line.startswith('jmp'):
-            jmp_lines.append(i)
+    nop_lines = [i for i, line in enumerate(data) if line.startswith('nop')]
+    jmp_lines = [i for i, line in enumerate(data) if line.startswith('jmp')]
     for line_num in nop_lines:
         prog = copy.deepcopy(data)
         prog[line_num] = prog[line_num].replace('nop', 'jmp')
