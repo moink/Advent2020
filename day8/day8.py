@@ -1,24 +1,10 @@
-import contextlib
-import collections
 import copy
-import functools
-import itertools
-import math
-import numpy as np
-import pandas as pd
-import re
 
 import advent_tools
 
-
-def process_input(data):
-    print(data)
-    return data
-
-
-class MyComputer(advent_tools.Computer):
+class HandheldComputer(advent_tools.Computer):
     operation = advent_tools.Computer.operation
-    return_register = 'a'
+    return_register = 'a'  # Needed for inheritance but not actually used
 
     def __init__(self):
         self.instruction_pointer = 0
@@ -55,32 +41,42 @@ class MyComputer(advent_tools.Computer):
             try:
                 line = program[self.instruction_pointer]
             except IndexError:
-                return self.registers[self.return_register]
+                return ('Finished', self.acc)
             if self.instruction_pointer in self.have_run:
-                return self.acc
+                return ('Infinite', self.acc)
             self.have_run.add(self.instruction_pointer)
             self.run_instruction(line)
             self.instruction_pointer = self.instruction_pointer + 1
 
 def run_part_1(data):
-    computer = MyComputer()
-    return computer.run_program(data)
+    computer = HandheldComputer()
+    return computer.run_program(data)[1]
 
 def run_part_2(data):
-    pass
-
+    nop_lines = []
+    jmp_lines = []
+    for i, line in enumerate(data):
+        if line.startswith('nop'):
+            nop_lines.append(i)
+        elif line.startswith('jmp'):
+            jmp_lines.append(i)
+    for line_num in nop_lines:
+        prog = copy.deepcopy(data)
+        prog[line_num] = prog[line_num].replace('nop', 'jmp')
+        comp = HandheldComputer()
+        fin, val = comp.run_program(prog)
+        if fin == 'Finished':
+            return val
+    for line_num in jmp_lines:
+        prog = copy.deepcopy(data)
+        prog[line_num] = prog[line_num].replace('jmp', 'nop')
+        comp = HandheldComputer()
+        fin, val = comp.run_program(prog)
+        if fin == 'Finished':
+            return val
+    return 'Failed'
 
 if __name__ == '__main__':
-    # advent_tools.TESTING = True
-    # data = advent_tools.read_all_integers()
-    # data = advent_tools.read_whole_input()
     data = advent_tools.read_input_lines()
-    # data = advent_tools.read_input_no_strip()
-    # data = advent_tools.read_dict_from_input_file(sep=' => ', key='left')
-    # data = advent_tools.read_dict_of_list_from_file(sep=' => ', key='left')
-    # data = advent_tools.read_one_int_per_line()
-    # data = advent_tools.PlottingGrid.from_file({'.' : 0, '#' : 1})
-    # data = advent_tools.read_input_line_groups()
-    # data = process_input(data)
     print('Part 1:', run_part_1(data))
-    # print('Part 2:', run_part_2(data))
+    print('Part 2:', run_part_2(data))
