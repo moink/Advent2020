@@ -36,9 +36,11 @@ class HandheldComputer(advent_tools.Computer):
             self.run_instruction(line)
             self.instruction_pointer = self.instruction_pointer + 1
 
+
 def run_part_1(data):
     computer = HandheldComputer()
     return computer.run_program(data)[1]
+
 
 def run_part_2(data):
     nop_lines = [i for i, line in enumerate(data) if line.startswith('nop')]
