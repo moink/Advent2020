@@ -11,7 +11,7 @@ def find_invalid(numbers, length):
         a = numbers[i - length:i]
         for x in a:
             for y in a:
-                if x + y == numbers[i]:
+                if x + y == numbers[i] and x != y:
                     found = True
                     break
             if found:
