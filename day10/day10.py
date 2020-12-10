@@ -18,8 +18,7 @@ def run_part_2(data):
     def count_ways(start):
         if start == end:
             return 1
-        count = sum(count_ways(num) for num in numbers if 1 <= num - start <= 3)
-        return count
+        return sum(count_ways(num) for num in numbers if 1 <= num - start <= 3)
 
     return count_ways(0)
 
