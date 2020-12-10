@@ -10,18 +10,18 @@ def run_part_1(data):
     return (count[1] + 1) * (count[3] + 1)
 
 
-@functools.lru_cache
-def count_ways(data, start, end):
-    if start == end:
-        return 1
-    next_nums = [num for num in data if 1 <= num - start <= 3]
-    count = sum(count_ways(data, next_num, end) for next_num in next_nums)
-    return count
-
-
 def run_part_2(data):
-    builtin = max(data) + 3
-    return count_ways(tuple(data + [builtin]), 0, builtin)
+    end = max(data) + 3
+    numbers = data + [end]
+
+    @functools.lru_cache
+    def count_ways(start):
+        if start == end:
+            return 1
+        count = sum(count_ways(num) for num in numbers if 1 <= num - start <= 3)
+        return count
+
+    return count_ways(0)
 
 
 if __name__ == '__main__':
