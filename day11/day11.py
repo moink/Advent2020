@@ -1,5 +1,3 @@
-import contextlib
-import collections
 import copy
 import functools
 import itertools
@@ -14,31 +12,18 @@ import advent_tools
 
 
 class GameOfLife(advent_tools.PlottingGrid):
-    """Implementation of Conway's Game Of Life
-
-    Works as is - you are most likely to want to change
-    self.convolve_matrix, or walls_treated_as, or to overwrite
-    evaluate_where_on
-
-    In 2015 day 18 part 2 I also had to change read_input_file (inherited
-    from PlottingGrid) to turn the corner lights on initially (they were
-    stuck on in the problem description).
-    """
-    # This is all eight neighbours
     convolve_matrix = np.asarray([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
-    # If you wanted just four neighbours, do instead:
-    # convolve_matrix = np.asarray([[0, 1, 0], [1, 0, 1], [0, 1, 0]])
     walls_treated_as = 0
 
     def count_neighbours_part_one(self):
-        """Count the number of neighbours each grid point has"""
+        """Count the number of neighbours each grid point has for part 1"""
         count = signal.convolve2d(self.grid == 1, self.convolve_matrix,
                                   mode='same', boundary='fill',
                                   fillvalue=self.walls_treated_as)
         return count
 
     def count_neighbours_part_two(self):
-        """Count the number of neighbours each grid point has"""
+        """Count the number of neighbours each grid point has for part 2"""
         directions = [(0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (1, 1)]
         count = np.zeros(self.grid.shape)
         for (y, x), _ in np.ndenumerate(self.grid):
@@ -61,15 +46,13 @@ class GameOfLife(advent_tools.PlottingGrid):
             else:
                 return 0
 
-
-
-    def one_step(self):
+    def one_step(self, count_fun, limit):
         """Take one game of life step"""
-        counts = self.count_neighbours_part_two()
-        self.evaluate_where_on(counts)
+        counts = count_fun()
+        self.evaluate_where_on(counts, limit)
         self.draw()
 
-    def evaluate_where_on(self, counts):
+    def evaluate_where_on(self, counts, limit):
         """Set the grid to the right setting based on the neighbour count
 
         Args:
@@ -83,14 +66,14 @@ class GameOfLife(advent_tools.PlottingGrid):
         # Otherwise turn off
         # old_grid = copy.deepcopy(self.grid)
         self.grid = np.where(np.logical_and(self.grid == 1,
-                                            counts >= 5), 0, self.grid)
+                                            counts >= limit), 0, self.grid)
         # For grid points that are off, if count is 3, turn on
         # Otherwise keep the same as grid calculated in previous step
         self.grid = np.where(np.logical_and(self.grid == 0, counts == 0), 1,
                              self.grid)
         # print('')
 
-    def simulate_n_steps(self):
+    def simulate_n_steps(self, count_fun, limit):
         """Take a defined number of steps of the Game of Life
 
         Args:
@@ -102,7 +85,7 @@ class GameOfLife(advent_tools.PlottingGrid):
         """
         while True:
             old_grid = copy.deepcopy(self.grid)
-            self.one_step()
+            self.one_step(count_fun, limit)
             if (old_grid == self.grid).all().all():
                 break
         self.draw()
@@ -119,14 +102,13 @@ def process_input(data):
 
 def run_part_1():
     g = GameOfLife.from_file({'L': 0, '#': 1, '.':2})
-    # g.show()
-    g.simulate_n_steps()
+    g.simulate_n_steps(g.count_neighbours_part_one, 4)
     return g.count_ones()
 
 
 def run_part_2():
     g = GameOfLife.from_file({'L': 0, '#': 1, '.': 2})
-    g.simulate_n_steps()
+    g.simulate_n_steps(g.count_neighbours_part_two, 5)
     return g.count_ones()
 
 
