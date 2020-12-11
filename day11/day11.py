@@ -61,7 +61,8 @@ class SeatingSystem(advent_tools.PlottingGrid):
 
     def evaluate_where_on(self, counts):
         self.grid = np.where(np.logical_and(self.grid == 1,
-                                            counts >= self.limit), 0, self.grid)
+                                            counts >= self.limit),
+                             0, self.grid)
         self.grid = np.where(np.logical_and(self.grid == 0, counts == 0), 1,
                              self.grid)
 
@@ -79,9 +80,10 @@ class SeatingSystem(advent_tools.PlottingGrid):
 
 
 def run_part(part_num):
-    g = SeatingSystem.seating_from_file({'L': 0, '#': 1, '.': 2}, part_num, False)
-    g.run_until_stable()
-    return g.count_ones()
+    seating = SeatingSystem.seating_from_file({'L': 0, '#': 1, '.': 2},
+                                              part_num, False)
+    seating.run_until_stable()
+    return seating.count_ones()
 
 
 if __name__ == '__main__':
