@@ -34,12 +34,12 @@ class SeatingSystem(advent_tools.PlottingGrid):
                       (0, -1), (1, -1), (1, 0), (1, 1)]
         count = np.zeros(self.grid.shape)
         for (y, x), _ in np.ndenumerate(self.grid):
-            for dir in directions:
-                count[y, x] = count[y, x] + self.next_neighbour(y, x, dir)
+            for direction in directions:
+                count[y, x] += self.next_neighbour(y, x, direction)
         return count
 
-    def next_neighbour(self, y, x, dir):
-        del_y, del_x = dir
+    def next_neighbour(self, y, x, direction):
+        del_y, del_x = direction
         while True:
             y = y + del_y
             x = x + del_x
@@ -82,6 +82,7 @@ def run_part(part_num):
     g = SeatingSystem.seating_from_file({'L': 0, '#': 1, '.': 2}, part_num, False)
     g.run_until_stable()
     return g.count_ones()
+
 
 if __name__ == '__main__':
     print('Part 1:', run_part(1))
