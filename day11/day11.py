@@ -9,7 +9,8 @@ class SeatingSystem(advent_tools.PlottingGrid):
     convolve_matrix = np.asarray([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
     walls_treated_as = 0
 
-    def __init__(self, char_map, part, plotting):
+    def __init__(self, part, plotting):
+        char_map = {'L': 0, '#': 1, '.': 2}
         shape = self.get_shape_from_file()
         super().__init__(shape)
         self.read_input_file(char_map)
@@ -80,7 +81,7 @@ class SeatingSystem(advent_tools.PlottingGrid):
 
 
 def run_part(part_num):
-    seating = SeatingSystem({'L': 0, '#': 1, '.': 2}, part_num, False)
+    seating = SeatingSystem(part_num, True)
     seating.run_until_stable()
     return seating.count_ones()
 
