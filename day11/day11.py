@@ -11,6 +11,7 @@ class SeatingSystem(advent_tools.PlottingGrid):
 
     @classmethod
     def seating_from_file(cls, char_map, part, plotting):
+
         new_grid = super().from_file(char_map)
         if part == 1:
             new_grid.count_fun = cls.count_neighbours_part_one
@@ -81,7 +82,7 @@ class SeatingSystem(advent_tools.PlottingGrid):
 
 def run_part(part_num):
     seating = SeatingSystem.seating_from_file({'L': 0, '#': 1, '.': 2},
-                                              part_num, False)
+                                              part_num, True)
     seating.run_until_stable()
     return seating.count_ones()
 
