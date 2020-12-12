@@ -22,6 +22,7 @@ TESTING = False
 
 
 def input_filename():
+    """Return correct filename depending on testing mode state"""
     if TESTING:
         warnings.warn("Test mode active, loading " + TEST_INPUT_FILENAME)
         return TEST_INPUT_FILENAME
@@ -278,6 +279,14 @@ class PlottingGrid:
 
     @classmethod
     def get_shape_from_file(cls):
+        """Determine the shape of the grid from the input file
+
+        Returns:
+            max_y:
+                Number of lines in the file
+            max_x:
+                Maximum number of characters in a line of the file
+        """
         text = read_input_lines()
         max_y = len(read_input_lines())
         max_x = max(len(line) for line in text)
@@ -290,13 +299,13 @@ class PlottingGrid:
         Args:
             char_map: {str: int}
                 Mapping of characters in the file to integers in the numpy
-                array. The default is {'.' : 0, '#' : 1} which is typical
+                array. The default is {'.': 0, '#': 1} which is typical
                 Topaz-notation for a maze with open areas and walls
         Returns:
             None
         """
         if char_map is None:
-            char_map = {'.' : 0, '#' : 1}
+            char_map = {'.': 0, '#': 1}
         lines = read_input_no_strip()
         for y_pos, line in enumerate(lines):
             for x_pos, char in enumerate(line):
