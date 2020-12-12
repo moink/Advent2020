@@ -80,21 +80,22 @@ def set_quadrant(point, quadrant):
 
 
 def rotate_waypoint_right(waypoint, count):
-    quadrant = get_quadrant(waypoint)
-    x, y = waypoint
-    for _ in range(count//90):
-        quadrant = (quadrant - 1) % 4
-        x, y = y, x
-    return set_quadrant((x, y), quadrant)
+    return rotate_waypoint(count, waypoint, -1)
 
 
 def rotate_waypoint_left(waypoint, count):
+    return rotate_waypoint(count, waypoint, 1)
+
+
+def rotate_waypoint(count, waypoint, sign):
+    turns = count // 90
     quadrant = get_quadrant(waypoint)
-    x, y = waypoint
-    for _ in range(count // 90):
-        quadrant = (quadrant + 1) % 4
-        x, y = y, x
-    return set_quadrant((x, y), quadrant)
+    new_quadrant = (quadrant + sign * turns) % 4
+    if turns % 2 == 0:
+        x, y = waypoint
+    else:
+        y, x = waypoint
+    return set_quadrant((x, y), new_quadrant)
 
 
 def run_part_2(instructions):
