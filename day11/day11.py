@@ -9,18 +9,17 @@ class SeatingSystem(advent_tools.PlottingGrid):
     convolve_matrix = np.asarray([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
     walls_treated_as = 0
 
-    @classmethod
-    def seating_from_file(cls, char_map, part, plotting):
-
-        new_grid = super().from_file(char_map)
+    def __init__(self, char_map, part, plotting):
+        shape = self.get_shape_from_file()
+        super().__init__(shape)
+        self.read_input_file(char_map)
         if part == 1:
-            new_grid.count_fun = cls.count_neighbours_part_one
-            new_grid.limit = 4
+            self.count_fun = self.count_neighbours_part_one
+            self.limit = 4
         else:
-            new_grid.count_fun = cls.count_neighbours_part_two
-            new_grid.limit = 5
-        new_grid.plotting = plotting
-        return new_grid
+            self.count_fun = self.count_neighbours_part_two
+            self.limit = 5
+        self.plotting = plotting
 
     def count_neighbours_part_one(self):
         """Count the number of neighbours each grid point has for part 1"""
@@ -48,14 +47,14 @@ class SeatingSystem(advent_tools.PlottingGrid):
                 try:
                     val = self.grid[y, x]
                 except IndexError:
-                    return 0
+                    return self.walls_treated_as
                 if val < 2:
                     return val
             else:
-                return 0
+                return self.walls_treated_as
 
     def one_step(self):
-        counts = self.count_fun(self)
+        counts = self.count_fun()
         self.evaluate_where_on(counts)
         if self.plotting:
             self.draw()
@@ -81,8 +80,7 @@ class SeatingSystem(advent_tools.PlottingGrid):
 
 
 def run_part(part_num):
-    seating = SeatingSystem.seating_from_file({'L': 0, '#': 1, '.': 2},
-                                              part_num, True)
+    seating = SeatingSystem({'L': 0, '#': 1, '.': 2}, part_num, False)
     seating.run_until_stable()
     return seating.count_ones()
 

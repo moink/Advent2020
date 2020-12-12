@@ -271,18 +271,18 @@ class PlottingGrid:
         Returns:
             None
         """
-        shape = cls.get_size_from_file()
+        shape = cls.get_shape_from_file()
         new_grid = cls(shape)
         new_grid.read_input_file(char_map)
         return new_grid
 
     @classmethod
-    def get_size_from_file(cls):
+    def get_shape_from_file(cls):
         text = read_input_lines()
         max_y = len(read_input_lines())
         max_x = max(len(line) for line in text)
         print(f'Creating Plotting Grid of size ({max_y}, {max_x})')
-        return max_x, max_y
+        return max_y, max_x
 
     def read_input_file(self, char_map=None):
         """Read and store the grid from today's input file
