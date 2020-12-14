@@ -47,15 +47,12 @@ def run_part_2(instructions):
             floating = [i for i, char in enumerate(inst[1]) if char == 'X']
         else:
             bits = list("{0:b}".format(inst[1]).zfill(36))
-            memory_locations = set()
             for pos in ones:
                 bits[pos] = '1'
             for bit_vals in itertools.product(('0', '1'), repeat=len(floating)):
                 for pos, bit_val in zip(floating, bit_vals):
                     bits[pos] = bit_val
-                    memory_locations.add(int(''.join(bits), 2))
-            for mem_loc in memory_locations:
-                memory[mem_loc] = inst[2]
+                    memory[(int(''.join(bits), 2))] = inst[2]
     return sum(memory.values())
 
 
