@@ -1,4 +1,3 @@
-import collections
 import itertools
 
 import advent_tools
@@ -18,7 +17,8 @@ def parse_instructions(lines):
 
 
 def run_part_1(instructions):
-    memory = collections.defaultdict(int)
+    memory = {}
+    bitmask = {}
     for inst in instructions:
         if inst[0] == 'mask':
             bitmask = {}
@@ -38,7 +38,7 @@ def run_part_1(instructions):
 
 
 def run_part_2(instructions):
-    memory = collections.defaultdict(int)
+    memory = {}
     ones = []
     floating = []
     for inst in instructions:
