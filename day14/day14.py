@@ -2,6 +2,8 @@ import itertools
 
 import advent_tools
 
+NUM_BITS = 36
+
 
 def parse_instructions(lines):
     result = []
@@ -26,7 +28,7 @@ def run_part_1(instructions):
                 if char != 'X':
                     bitmask[i] = char
         else:
-            num_str = "{0:b}".format(inst[2]).zfill(36)
+            num_str = "{0:b}".format(inst[2]).zfill(NUM_BITS)
             to_write = ''
             for i, char in enumerate(num_str):
                 try:
@@ -46,7 +48,7 @@ def run_part_2(instructions):
             ones = [i for i, char in enumerate(inst[1]) if char == '1']
             floating = [i for i, char in enumerate(inst[1]) if char == 'X']
         else:
-            bits = list("{0:b}".format(inst[1]).zfill(36))
+            bits = list("{0:b}".format(inst[1]).zfill(NUM_BITS))
             for pos in ones:
                 bits[pos] = '1'
             for bit_vals in itertools.product(('0', '1'), repeat=len(floating)):
@@ -57,7 +59,6 @@ def run_part_2(instructions):
 
 
 if __name__ == '__main__':
-    data = advent_tools.read_input_lines()
-    data = parse_instructions(data)
+    data = parse_instructions(advent_tools.read_input_lines())
     print('Part 1:', run_part_1(data))
     print('Part 2:', run_part_2(data))
