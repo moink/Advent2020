@@ -2,6 +2,7 @@ import advent_tools
 
 
 def memory_game(starting_numbers, end):
+    number = 0
     last_called = {n: i for i, n in enumerate(starting_numbers[:-1])}
     prev_number = starting_numbers[-1]
     for turn in range(len(starting_numbers), end):
