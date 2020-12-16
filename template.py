@@ -11,19 +11,7 @@ import re
 import advent_tools
 
 
-def process_input(data):
-    print(data)
-    return data
-
-def run_part_1(data):
-    pass
-
-
-def run_part_2(data):
-    pass
-
-
-if __name__ == '__main__':
+def main():
     advent_tools.TESTING = True
     # data = advent_tools.read_all_integers()
     # data = advent_tools.read_whole_input()
@@ -37,3 +25,20 @@ if __name__ == '__main__':
     data = process_input(data)
     print('Part 1:', run_part_1(data))
     print('Part 2:', run_part_2(data))
+
+
+def process_input(data):
+    print(data)
+    return data
+
+
+def run_part_1(data):
+    pass
+
+
+def run_part_2(data):
+    pass
+
+
+if __name__ == '__main__':
+    main()

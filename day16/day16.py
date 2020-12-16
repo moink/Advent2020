@@ -16,11 +16,11 @@ def parse_input(data):
     rules = collections.defaultdict(list)
     for rule in data[0]:
         name, numbers = rule.split(':')
-        for ran in numbers.split(' or '):
-            low, high = ran.split('-')
+        for interval in numbers.split(' or '):
+            low, high = interval.split('-')
             rules[name].append((int(low), int(high)))
-    other_tickets = [parse_ticket(ticket)  for ticket in data[2][1:]]
     my_ticket = parse_ticket(data[1][1])
+    other_tickets = [parse_ticket(ticket) for ticket in data[2][1:]]
     return rules, my_ticket, other_tickets
 
 
