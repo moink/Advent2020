@@ -54,7 +54,7 @@ def run_part_2(instructions):
             for bit_vals in itertools.product(('0', '1'), repeat=len(floating)):
                 for pos, bit_val in zip(floating, bit_vals):
                     bits[pos] = bit_val
-                    memory[(int(''.join(bits), 2))] = inst[2]
+                memory[(int(''.join(bits), 2))] = inst[2]
     return sum(memory.values())
 
 
