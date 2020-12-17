@@ -6,6 +6,7 @@ import copy
 import datetime
 import hashlib
 import itertools
+import math
 import os
 import re
 import shutil
@@ -259,7 +260,7 @@ class PlottingGrid:
         self.grid = np.zeros(shape, dtype=int)
 
     @classmethod
-    def from_file(cls, char_map=None):
+    def from_file(cls, char_map=None, dimension=2, padding=0):
         """Create a new plotting grid from today's input file
 
         Alternative constructor
@@ -272,9 +273,11 @@ class PlottingGrid:
         Returns:
             None
         """
-        shape = cls.get_shape_from_file()
+        a, b = cls.get_shape_from_file()
+        shape = (tuple(2 * padding for _ in range(dimension - 2))
+                 + (a + 2 * padding, b + 2 * padding))
         new_grid = cls(shape)
-        new_grid.read_input_file(char_map)
+        new_grid.read_input_file(char_map, dimension, padding)
         return new_grid
 
     @classmethod
@@ -290,10 +293,10 @@ class PlottingGrid:
         text = read_input_lines()
         max_y = len(read_input_lines())
         max_x = max(len(line) for line in text)
-        print(f'Creating Plotting Grid of size ({max_y}, {max_x})')
+        print(f'Size of grid in file is ({max_y}, {max_x})')
         return max_y, max_x
 
-    def read_input_file(self, char_map=None):
+    def read_input_file(self, char_map=None, dimension=2, padding=0):
         """Read and store the grid from today's input file
 
         Args:
@@ -309,7 +312,9 @@ class PlottingGrid:
         lines = read_input_no_strip()
         for y_pos, line in enumerate(lines):
             for x_pos, char in enumerate(line):
-                self.grid[y_pos, x_pos] = char_map[char]
+                index = (tuple(padding for _ in range(dimension - 2))
+                         + (y_pos + padding, x_pos + padding))
+                self.grid[index] = char_map[char]
 
     def show(self):
         """Show the grid in a new window
@@ -319,9 +324,7 @@ class PlottingGrid:
         Returns:
             None
         """
-        plt.clf()
-        plt.imshow(self.grid)
-        plt.colorbar()
+        self.imshow_grid()
         plt.show()
 
     def draw(self, pause_time=0.01):
@@ -338,11 +341,34 @@ class PlottingGrid:
         Returns:
             None
         """
-        plt.clf()
-        plt.imshow(self.grid)
-        plt.colorbar()
+        self.imshow_grid()
         plt.draw()
         plt.pause(pause_time)
+
+    def imshow_grid(self):
+        plt.clf()
+        dimension = len(self.grid.shape)
+        if dimension == 2:
+            plt.imshow(self.grid)
+        elif dimension == 3:
+            self.draw_3d()
+        elif dimension == 4:
+            self.draw_4d()
+        # plt.colorbar()
+
+    def draw_3d(self):
+        num_planes = self.grid.shape[0]
+        side = int(math.ceil(math.sqrt(num_planes)))
+        for i in range(num_planes):
+            plt.subplot(side, side, i + 1)
+            plt.imshow(self.grid[i, :, :])
+
+    def draw_4d(self):
+        n1, n2, _, _ = self.grid.shape
+        for i in range(n1):
+            for j in range(n2):
+                plt.subplot(n1, n2, j*n1 + i + 1)
+                plt.imshow(self.grid[i, j, :, :])
 
     def sum(self):
         """Returns the sum of the values in the grid
@@ -374,17 +400,22 @@ class GameOfLife(PlottingGrid):
     from PlottingGrid) to turn the corner lights on initially (they were
     stuck on in the problem description).
     """
-    # This is all eight neighbours
-    convolve_matrix = np.asarray([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
     # If you wanted just four neighbours, do instead:
     # convolve_matrix = np.asarray([[0, 1, 0], [1, 0, 1], [0, 1, 0]])
-    walls_treated_as = 0
+
+    def __init__(self, shape):
+        super().__init__(shape)
+        dimension = len(shape)
+        # This is all eight neighbours
+        convolve_shape = tuple(3 for _ in range(dimension))
+        self.convolve_matrix = np.ones(convolve_shape)
+        middle_point = tuple(1 for _ in range(dimension))
+        self.convolve_matrix[middle_point] = 0
 
     def count_neighbours(self):
         """Count the number of neighbours each grid point has"""
-        count = signal.convolve2d(self.grid, self.convolve_matrix,
-                                  mode='same', boundary='fill',
-                                  fillvalue=self.walls_treated_as)
+        count = signal.convolve(self.grid, self.convolve_matrix,
+                                mode='same').round(0).astype(int)
         return count
 
     def one_step(self):
