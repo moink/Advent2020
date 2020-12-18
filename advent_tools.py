@@ -340,6 +340,7 @@ class PlottingGrid:
 
         Returns:
             None
+
         """
         self.imshow_grid()
         plt.draw()
