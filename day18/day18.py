@@ -45,9 +45,7 @@ def rules_part1(expr):
 
 
 def rules_part2(expr):
-    if '+' not in expr:
-        return eval(expr)
-    if '+' in expr and '*' not in expr:
+    if '+' not in expr or '*' not in expr:
         return eval(expr)
     left, right = expr.split('*', 1)
     return rules_part2(left) * rules_part2(right)

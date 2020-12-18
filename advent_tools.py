@@ -268,8 +268,13 @@ class PlottingGrid:
         Args:
             char_map: {str: int}
                 Mapping of characters in the file to integers in the numpy
-                array. For example {'.' : 0, '#' : 1} which is typical
+                array. Optional, default {'.' : 0, '#' : 1} which is typical
                 Topaz-notation for a maze with open areas and walls
+            dimension: int
+                Dimension of the resulting grid. Optional, default 2
+            padding: int
+                Padding to apply in each direction in all dimensions to the size of
+                the grid
         Returns:
             None
         """
@@ -304,6 +309,11 @@ class PlottingGrid:
                 Mapping of characters in the file to integers in the numpy
                 array. The default is {'.': 0, '#': 1} which is typical
                 Topaz-notation for a maze with open areas and walls
+        dimension: int
+                Dimension of the resulting grid. Optional, default 2
+            padding: int
+                Padding to apply in each direction in all dimensions to the size of
+                the grid
         Returns:
             None
         """
@@ -340,13 +350,13 @@ class PlottingGrid:
 
         Returns:
             None
-
         """
         self.imshow_grid()
         plt.draw()
         plt.pause(pause_time)
 
     def imshow_grid(self):
+        """Visualize the current state of the grid"""
         plt.clf()
         dimension = len(self.grid.shape)
         if dimension == 2:
@@ -355,9 +365,11 @@ class PlottingGrid:
             self.draw_3d()
         elif dimension == 4:
             self.draw_4d()
+        # Do nothing for higher dimensions
         # plt.colorbar()
 
     def draw_3d(self):
+        """Draw 2D slices through the 3D grid in subplots"""
         num_planes = self.grid.shape[0]
         side = int(math.ceil(math.sqrt(num_planes)))
         for i in range(num_planes):
@@ -365,10 +377,11 @@ class PlottingGrid:
             plt.imshow(self.grid[i, :, :])
 
     def draw_4d(self):
-        n1, n2, _, _ = self.grid.shape
-        for i in range(n1):
-            for j in range(n2):
-                plt.subplot(n1, n2, j*n1 + i + 1)
+        """Draw 2D slices through the 4D grid in a grid of subplots"""
+        n_rows, n_cols, _, _ = self.grid.shape
+        for i in range(n_rows):
+            for j in range(n_cols):
+                plt.subplot(n_rows, n_cols, j * n_rows + i + 1)
                 plt.imshow(self.grid[i, j, :, :])
 
     def sum(self):
@@ -401,13 +414,10 @@ class GameOfLife(PlottingGrid):
     from PlottingGrid) to turn the corner lights on initially (they were
     stuck on in the problem description).
     """
-    # If you wanted just four neighbours, do instead:
-    # convolve_matrix = np.asarray([[0, 1, 0], [1, 0, 1], [0, 1, 0]])
-
     def __init__(self, shape):
         super().__init__(shape)
         dimension = len(shape)
-        # This is all eight neighbours
+        # This is all neighbours - 8 for 2D, 3**n - 1 for N-D
         convolve_shape = tuple(3 for _ in range(dimension))
         self.convolve_matrix = np.ones(convolve_shape)
         middle_point = tuple(1 for _ in range(dimension))
