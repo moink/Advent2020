@@ -5,12 +5,13 @@ import advent_tools
 
 def main():
     lines = advent_tools.read_input_lines()
-    no_allergen_ingredients, allergen_ingredient_map = solve_logic(lines)
-    print('Part 1:', run_part_1(lines, no_allergen_ingredients))
+    possibilities, allergen_ingredient_map = solve_logic(lines)
+    print('Part 1:', run_part_1(lines, possibilities))
     print('Part 2:', run_part_2(allergen_ingredient_map))
 
 
-def run_part_1(data, no_allergen_ingredients):
+def run_part_1(data, possibilities):
+    no_allergen_ingredients = possibilities[possibilities.sum(axis=1) == 0].index
     return sum(1 for line in data for word in line.split()
                if word in no_allergen_ingredients)
 
@@ -29,8 +30,7 @@ def solve_logic(data):
             possibilities.loc[ingredient, :] = False
             possibilities.loc[ingredient, allergen] = True
             allergen_ingredient_map[allergen] = ingredient
-    no_allergen_ingredients = possibilities[possibilities.sum(axis=1) == 0].index
-    return no_allergen_ingredients, allergen_ingredient_map
+    return possibilities, allergen_ingredient_map
 
 
 def get_possibilities(data):
