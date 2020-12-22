@@ -15,6 +15,7 @@ def run_part_1(data, possibilities):
     return sum(1 for line in data for word in line.split()
                if word in no_allergen_ingredients)
 
+
 def run_part_2(allergen_ingredient_map):
     return ','.join(allergen_ingredient_map[key]
                     for key in sorted(allergen_ingredient_map.keys()))
