@@ -34,32 +34,36 @@ def run_game(data, moves, verbose=False):
     for char in data[1:]:
         cll.add_node_after_current(int(char))
     cll.move_clockwise(1)
+    num_cups = len(data)
+    max_data = max(data)
     for move in range(1, moves + 1):
         print_if_condition(f'\n-- move {move} --', move % 1000000 == 0 or verbose)
         print_if_condition('cups: {cll}', verbose)
-        cc_label = cll.get_current()
-        dest_cup = (cc_label - 1) % len(data)
-        if dest_cup == 0:
-            dest_cup = max(data)
+        dest_cup = cup_label_minus_one(cll.get_current(), num_cups, max_data)
         picked_up = []
-        prev_current = cll.current
+        prev_current = cll.get_current()
         cll.move_clockwise(1)
         for pick_up in range(3):
             picked_up.append(cll.get_current())
             cll.remove_current_node()
         print_if_condition(f'pick up: {picked_up}', verbose)
         while dest_cup in picked_up:
-            dest_cup = (dest_cup - 1) % len(data)
-            if dest_cup == 0:
-                dest_cup = max(data)
+            dest_cup = cup_label_minus_one(dest_cup, num_cups, max_data)
         print_if_condition(f'destination {dest_cup}', verbose)
         cll.set_current_to_data(dest_cup)
         for p in picked_up:
             cll.add_node_after_current(p)
-        cll.current = prev_current
+        cll.set_current_to_data(prev_current)
         cll.move_clockwise(1)
     cll.set_current_to_data(1)
     return cll
+
+
+def cup_label_minus_one(cup_label, num_cups, max_cup_label):
+    result = (cup_label - 1) % num_cups
+    if result == 0:
+        result = max_cup_label
+    return result
 
 
 def print_if_condition(message, verbose):
