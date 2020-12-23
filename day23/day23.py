@@ -2,28 +2,26 @@ import advent_tools
 
 
 def main():
-    advent_tools.TESTING = True
-    print('Part 1:', run_part_1())
-    print('Part 2:', run_part_2())
+    data = advent_tools.read_whole_input()
+    print('Part 1:', run_part_1(data))
+    print('Part 2:', run_part_2(data))
 
 
-def run_part_1():
-    data = '219748365'
-    data = [int(char) for char in data]
-    cll = run_game(data, 100)
+def run_part_1(data):
+    cups = [int(char) for char in data]
+    cll = run_game(cups, 100)
     result = []
-    for _ in range(len(data) - 1):
+    for _ in range(len(cups) - 1):
         cll.move_clockwise(1)
         result.append(str(cll.get_current()))
     return ''.join(result).replace('0', '9')
 
 
-def run_part_2():
-    data = '219748365'
+def run_part_2(data):
     moves = 10000000
-    data = [int(char) for char in data]
-    data = data + list(range(10, 1000001))
-    cll = run_game(data, moves)
+    cups = [int(char) for char in data]
+    cups = cups + list(range(10, 1000001))
+    cll = run_game(cups, moves)
     cll.move_clockwise(1)
     result1 = cll.get_current()
     cll.move_clockwise(1)
