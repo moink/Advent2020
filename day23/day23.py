@@ -14,7 +14,7 @@ def run_part_1(data):
     for _ in range(len(cups) - 1):
         cll.move_clockwise(1)
         result.append(str(cll.get_current()))
-    return ''.join(result).replace('0', '9')
+    return ''.join(result)
 
 
 def run_part_2(data):
