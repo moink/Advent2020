@@ -953,6 +953,8 @@ class CircularLinkedList:
         self.current = new_node
 
     def remove_current_node(self):
+        if self.current == self.head:
+            self.head = self.current.previous
         self.current.previous.next = self.current.next
         self.current.next.previous = self.current.previous
         self.current = self.current.next
@@ -968,7 +970,12 @@ class CircularLinkedList:
     def __str__(self):
         result = str(self.head) + ' '
         place = self.head.next
+        n = 100
+        count = 0
         while place != self.head:
+            count+=1
+            if count > n:
+                raise RuntimeError('lost head')
             if place == self.current:
                 result = result + '(' + str(place) + ') '
             else:
