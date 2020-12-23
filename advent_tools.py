@@ -935,11 +935,12 @@ class LinkedListNode:
 
 
 class CircularLinkedList:
-    def __init__(self):
-        self.head = LinkedListNode(0)
+    def __init__(self, first_node=0):
+        self.head = LinkedListNode(first_node)
         self.head.next = self.head
         self.head.previous = self.head
         self.current = self.head
+        self.node_locs = {first_node: self.head}
 
     def get_current(self):
         return self.current.data
@@ -951,6 +952,7 @@ class CircularLinkedList:
         self.current.next.previous = new_node
         self.current.next = new_node
         self.current = new_node
+        self.node_locs[data] = new_node
 
     def remove_current_node(self):
         if self.current == self.head:
@@ -966,6 +968,9 @@ class CircularLinkedList:
     def move_counterclockwise(self, steps):
         for _ in range(steps):
             self.current = self.current.previous
+
+    def set_current_to_data(self, data):
+        self.current = self.node_locs[data]
 
     def __str__(self):
         result = str(self.head) + ' '
