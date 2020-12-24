@@ -4,6 +4,7 @@ import numpy as np
 
 import advent_tools
 
+
 DIR_MAP = {'nw': (-1, -1),
            'ne': (1, -1),
            'w': (-2, 0),
@@ -12,6 +13,8 @@ DIR_MAP = {'nw': (-1, -1),
            'se': (1, 1)}
 
 DIRECTIONS = {key: np.asarray(val) for key, val in DIR_MAP.items()}
+
+TWO_LETTER_DIRS = [direc for direc in DIRECTIONS if len(direc) > 1]
 
 
 def main():
@@ -22,8 +25,7 @@ def main():
 
 
 def get_tile_flipped(line):
-    two_letter_dirs = [direc for direc in DIRECTIONS if len(direc) > 1]
-    for direc in two_letter_dirs:
+    for direc in TWO_LETTER_DIRS:
         if line == direc:
             return DIRECTIONS[direc]
         if line.startswith(direc):
@@ -36,17 +38,16 @@ def get_tile_flipped(line):
 
 def get_floor(flipped):
     count_flips = collections.Counter(tuple(tile) for tile in flipped)
-    floor = {tile: flip_count % 2 == 1 for tile, flip_count in count_flips.items()}
-    return floor
+    return {tile: flip_count % 2 == 1 for tile, flip_count in count_flips.items()}
 
 
-def run_part_2(initial_black_tiles):
+def run_part_2(initial_floor):
     floor = collections.defaultdict(bool)
-    floor.update(initial_black_tiles)
+    floor.update(initial_floor)
     for day in range(100):
         counts = collections.defaultdict(int)
-        for tile, black in floor.items():
-            if black:
+        for tile, is_black in floor.items():
+            if is_black:
                 for direction in DIRECTIONS.values():
                     counts[tuple(np.asarray(tile) + direction)] += 1
         all_tiles = set(floor.keys()).union(counts.keys())
