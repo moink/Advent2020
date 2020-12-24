@@ -15,40 +15,34 @@ DIRECTIONS = {key: np.asarray(val) for key, val in DIR_MAP.items()}
 
 
 def main():
-    data = [process_line(line) for line in (advent_tools.read_input_lines())]
-    floor = get_initial_map(data)
-    print('Part 1:', run_part_1(floor))
+    flipped = [get_tile_flipped(line) for line in (advent_tools.read_input_lines())]
+    floor = get_floor(flipped)
+    print('Part 1:', sum(floor.values()))
     print('Part 2:', run_part_2(floor))
 
 
-def process_line(line):
+def get_tile_flipped(line):
     two_letter_dirs = [direc for direc in DIRECTIONS if len(direc) > 1]
     for direc in two_letter_dirs:
         if line == direc:
-            return [direc]
+            return DIRECTIONS[direc]
         if line.startswith(direc):
-            return [direc] + process_line(line[2:])
+            return DIRECTIONS[direc] + get_tile_flipped(line[2:])
     try:
-        return [line[0]] + process_line(line[1:])
+        return DIRECTIONS[line[0]] + get_tile_flipped(line[1:])
     except IndexError:
-        return [line[0]]
+        return DIRECTIONS[line[0]]
 
 
-def get_initial_map(data):
-    floor = collections.defaultdict(bool)
-    for line in data:
-        tile = np.asarray((0, 0))
-        for direc in line:
-            tile = tile + DIRECTIONS[direc]
-        floor[tuple(tile)] = not floor[tuple(tile)]
+def get_floor(flipped):
+    count_flips = collections.Counter(tuple(tile) for tile in flipped)
+    floor = {tile: flip_count % 2 == 1 for tile, flip_count in count_flips.items()}
     return floor
 
 
-def run_part_1(floor):
-    return sum(floor.values())
-
-
-def run_part_2(floor):
+def run_part_2(initial_black_tiles):
+    floor = collections.defaultdict(bool)
+    floor.update(initial_black_tiles)
     for day in range(100):
         counts = collections.defaultdict(int)
         for tile, black in floor.items():
